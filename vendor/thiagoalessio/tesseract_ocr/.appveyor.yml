@@ -1,0 +1,21 @@
+---
+build: false
+
+install:
+  - ps: Set-Service wuauserv -StartupType Manual
+  - choco install php
+  - choco install capture2text --version 3.9
+  - choco install composer
+  - refreshenv
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - composer install
+
+test_script:
+  - php tests\run.php unit e2e
+
+notifications:
+  - provider: Webhook
+    url: https://webhooks.gitter.im/e/b48c69af70a9047dba30
+    on_build_success: true
+    on_build_failure: true
+    on_build_status_changed: true
